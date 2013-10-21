@@ -1,0 +1,14 @@
+message A {
+    required string name = 1;
+    required B b = 2;
+}
+
+message B {
+    required string name = 1;
+    required string otherName = 2;
+    required C c = 3;
+}
+
+message C {
+    required string name = 1;
+}

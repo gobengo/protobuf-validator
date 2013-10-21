@@ -1,0 +1,29 @@
+{
+  "name": "protobufjs-validator",
+  "version": "0.0.0",
+  "description": "Validate ProtoBuf.js Messages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gobengo/protobufjs-validator.git"
+  },
+  "keywords": [
+    "protobuf",
+    "protobufjs"
+  ],
+  "author": "Benjamin Goering",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/gobengo/protobufjs-validator/issues"
+  },
+  "dependencies": {
+    "protobufjs": "~1.1.8"
+  },
+  "devDependencies": {
+    "mocha": "~1.13.0",
+    "chai": "~1.8.1"
+  }
+}
