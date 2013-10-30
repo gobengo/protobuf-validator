@@ -56,5 +56,5 @@ ProtoValidator.prototype.validateField = function (field, value) {
  * want to collect all errors when validating.
  */
 ProtoValidator.prototype.error = function (err) {
-    throw err;
+    throw new Error(err);
 }
