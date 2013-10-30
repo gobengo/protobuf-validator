@@ -1,6 +1,6 @@
 'use strict';
 
-var ProtoValidator = require('..');
+var ProtoValidator = require('..').ProtoValidator;
 var path = require('path');
 var ProtoBuf = require('protobufjs');
 var expect = require('chai').expect;
@@ -10,63 +10,74 @@ var aReflect = builder.lookup('A');
 var messages = builder.build();
 
 describe('protobufjs-validator', function () {
-    it('allows valid messages', function () {
+    it('.validate(obj) saves ._message', function () {
         var validator = new ProtoValidator(builder.lookup('C'));
-        var c = new messages.C({
-            name: 'c'
-        });
+        var c = new messages.C({});
         expect(function () {
             validator.validate(c);
         }).not.to.throw();
+        expect(validator._message).to.equal(c);
     });
 
-    it('allows valid objects that look like the message', function () {
-        var validator = new ProtoValidator(builder.lookup('C'));
-        var c = {
-            name: 'c'
-        };
-        expect(function () {
-            validator.validate(c);
-        }).not.to.throw();
-    });
-
-    it('validates simple messages', function () {
-        var validator = new ProtoValidator(aReflect);
-        var a = new messages.A();
-        expect(function () {
-            validator.validate(a);
-        }).to.throw(ProtoValidator.ValdatorError);
-    });
-
-    it('validates objects that look like messages', function () {
-        var a = {};
-        expect(function () {
-            validator.validate(a);
-        }).to.throw(ProtoValidator.ValdatorError);
-    });
-
-    it('validates nested messages', function () {
-        var validator = new ProtoValidator(aReflect);
-        var b = new messages.B();
-        var a = new messages.A({
-            name: 'A',
-            b: b
+    describe('.hasRequiredFields()', function () {
+        it('allows messages with all fields', function () {
+            var validator = new ProtoValidator(builder.lookup('C'));
+            var c = new messages.C({
+                name: 'c'
+            });
+            expect(function () {
+                validator.validate(c).hasRequiredFields();
+            }).not.to.throw();
         });
-        expect(function () {
-            validator.validate(a);
-        }).to.throw(ProtoValidator.ValdatorError);
-    });
 
-    it('validates nested objects that look like nested messages', function () {
-        var validator = new ProtoValidator(aReflect);
-        var b = {};
-        var a = {
-            name: 'A',
-            b: b
-        };
-        expect(function () {
-            validator.validate(a);
-        }).to.throw(ProtoValidator.ValdatorError);
+        it('allows objects with all fields', function () {
+            var validator = new ProtoValidator(builder.lookup('C'));
+            var c = {
+                name: 'c'
+            };
+            expect(function () {
+                validator.validate(c).hasRequiredFields();
+            }).not.to.throw();
+        });
+
+        it('rejects messages without all fields', function () {
+            var validator = new ProtoValidator(aReflect);
+            var a = new messages.A();
+            expect(function () {
+                validator.validate(a).hasRequiredFields();
+            }).to.throw(ProtoValidator.ValdatorError);
+        });
+
+        it('rejects objects without all fields', function () {
+            var a = {};
+            expect(function () {
+                validator.validate(a);
+            }).to.throw(ProtoValidator.ValdatorError);
+        });
+
+        it('rejects nested messages without all fields', function () {
+            var validator = new ProtoValidator(aReflect);
+            var b = new messages.B();
+            var a = new messages.A({
+                name: 'A',
+                b: b
+            });
+            expect(function () {
+                validator.validate(a).hasRequiredFields();
+            }).to.throw(ProtoValidator.ValdatorError);
+        });
+
+        it('rejects nested objects without all fields', function () {
+            var validator = new ProtoValidator(aReflect);
+            var b = {};
+            var a = {
+                name: 'A',
+                b: b
+            };
+            expect(function () {
+                validator.validate(a).hasRequiredFields();
+            }).to.throw(ProtoValidator.ValdatorError);
+        });
     });
 
     it('can overwrite .error to store errors', function () {
@@ -87,9 +98,11 @@ describe('protobufjs-validator', function () {
             })
         });
         expect(function () {
-            validator.validate(a);
+            validator.validate(a).hasRequiredFields();
         }).not.to.throw();
         // 3 missing names === 3 errors
-        expect(validator.getErrors().length).to.equal(3);
+        var errors = validator.getErrors();
+        expect(errors.length).to.equal(3);
+        expect(errors[2]).to.equal('b.c.name is required');
     });
 });
