@@ -6,12 +6,16 @@ var ProtoBuf = require('protobufjs');
 var expect = require('chai').expect;
 
 var builder = ProtoBuf.protoFromFile(path.join(__dirname, 'messages.proto'));
-var aReflect = builder.lookup('A');
+var reflects = builder.lookup().children.reduce(function (prev, cur) {
+    prev[cur.name] = cur;
+    return prev;
+}, {});
+console.log(reflects);
 var messages = builder.build();
 
 describe('protobufjs-validator', function () {
     it('.validate(obj) saves ._message', function () {
-        var validator = new ProtoValidator(builder.lookup('C'));
+        var validator = new ProtoValidator(reflects.C);
         var c = new messages.C({});
         expect(function () {
             validator.validate(c);
@@ -21,7 +25,7 @@ describe('protobufjs-validator', function () {
 
     describe('.hasRequiredFields()', function () {
         it('allows messages with all fields', function () {
-            var validator = new ProtoValidator(builder.lookup('C'));
+            var validator = new ProtoValidator(reflects.C);
             var c = new messages.C({
                 name: 'c'
             });
@@ -31,7 +35,7 @@ describe('protobufjs-validator', function () {
         });
 
         it('allows objects with all fields', function () {
-            var validator = new ProtoValidator(builder.lookup('C'));
+            var validator = new ProtoValidator(reflects.C);
             var c = {
                 name: 'c'
             };
@@ -41,7 +45,7 @@ describe('protobufjs-validator', function () {
         });
 
         it('rejects messages without all fields', function () {
-            var validator = new ProtoValidator(aReflect);
+            var validator = new ProtoValidator(reflects.A);
             var a = new messages.A();
             expect(function () {
                 validator.validate(a).hasRequiredFields();
@@ -56,7 +60,7 @@ describe('protobufjs-validator', function () {
         });
 
         it('rejects nested messages without all fields', function () {
-            var validator = new ProtoValidator(aReflect);
+            var validator = new ProtoValidator(reflects.A);
             var b = new messages.B();
             var a = new messages.A({
                 name: 'A',
@@ -68,7 +72,7 @@ describe('protobufjs-validator', function () {
         });
 
         it('rejects nested objects without all fields', function () {
-            var validator = new ProtoValidator(aReflect);
+            var validator = new ProtoValidator(reflects.A);
             var b = {};
             var a = {
                 name: 'A',
@@ -81,7 +85,7 @@ describe('protobufjs-validator', function () {
     });
 
     it('can overwrite .error to store errors', function () {
-        var validator = new ProtoValidator(aReflect);
+        var validator = new ProtoValidator(reflects.A);
         validator._errors = [];
         validator.error = function (err) {
             this._errors.push(err);
