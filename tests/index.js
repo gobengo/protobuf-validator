@@ -28,7 +28,7 @@ describe('protobufjs-validator', function () {
         var a = new messages.A();
         expect(function () {
             validator.validate(a);
-        }).to.throw();
+        }).to.throw(ProtoValidator.ValdatorError);
     });
 
     it('validates nested messages', function () {
@@ -40,7 +40,7 @@ describe('protobufjs-validator', function () {
         });
         expect(function () {
             validator.validate(a);
-        }).to.throw();
+        }).to.throw(ProtoValidator.ValdatorError);
     });
 
     it('can overwrite .error to store errors', function () {

@@ -26,7 +26,7 @@ ProtoValidator.prototype.validate = function (message) {
     this._reflect.getChildren().forEach(function (field) {
         self.validateField(field, message[field.name]);
     });
-}
+};
 
 /**
  * Validate a single field on a message
@@ -48,7 +48,7 @@ ProtoValidator.prototype.validateField = function (field, value) {
         }
         fieldValidator.validate(value);
     }
-}
+};
 
 /**
  * Report an error in validation. By default, throw.
@@ -56,5 +56,11 @@ ProtoValidator.prototype.validateField = function (field, value) {
  * want to collect all errors when validating.
  */
 ProtoValidator.prototype.error = function (err) {
-    throw new Error(err);
-}
+    throw new ValidatorError(err);
+};
+
+var ValidatorError = exports.ValidatorError = function(msg) {
+    Error.captureStackTrace(this, this);
+    this.name = 'ValidatorError';
+    this.message = msg;
+};
