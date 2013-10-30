@@ -36,7 +36,7 @@ ProtoValidator.prototype.validate = function (message) {
  */
 ProtoValidator.prototype.validateField = function (field, value) {
     var self = this;
-    if (field.required && value === null) {
+    if (field.required && (value === null || value === undefined)) {
         this.error(this._fieldPrefix + field.name + ' is required');
     }
     if (field.resolvedType && value) {
