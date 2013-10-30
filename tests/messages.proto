@@ -5,7 +5,6 @@ message A {
 
 message B {
     required string name = 1;
-    required string otherName = 2;
     required C c = 3;
 }
 

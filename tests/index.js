@@ -12,16 +12,15 @@ var expect = require('chai').expect;
 
 describe('protobufjs-validator', function () {
     it('allows valid objects', function () {
-        var validator = new ProtoValidator(aReflect);
-        var b = new messages.B({ name: 'b' });
-        var a = new messages.A({
-            name: 'A',
-            b: b
+        var validator = new ProtoValidator(builder.lookup('C'));
+        var c = new messages.C({
+            name: 'c'
         });
         expect(function () {
-            validator.validate(a);
+            validator.validate(c);
         }).not.to.throw();
     });
+
     it('validates simple messages', function () {
         var validator = new ProtoValidator(aReflect);
         var a = new messages.A();
@@ -29,6 +28,7 @@ describe('protobufjs-validator', function () {
             validator.validate(a);
         }).to.throw();
     });
+
     it('validates nested messages', function () {
         var validator = new ProtoValidator(aReflect);
         var b = new messages.B();
@@ -40,6 +40,7 @@ describe('protobufjs-validator', function () {
             validator.validate(a);
         }).to.throw();
     });
+
     it('can overwrite .error to store errors', function () {
         var validator = new ProtoValidator(aReflect);
         validator._errors = [];
@@ -48,15 +49,19 @@ describe('protobufjs-validator', function () {
         };
         validator.getErrors = function () {
             return this._errors;
-        }
-        var b = new messages.B();
+        };
+        // Missig name
         var a = new messages.A({
-            name: 'A',
-            b: b
+            // Missing name
+            b: new messages.B({
+                // Missing name
+                c: new messages.C()
+            })
         });
         expect(function () {
             validator.validate(a);
         }).not.to.throw();
+        // 3 missing names === 3 errors
         expect(validator.getErrors().length).to.equal(3);
     })
 })
