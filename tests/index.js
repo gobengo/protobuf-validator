@@ -1,3 +1,5 @@
+'use strict';
+
 var ProtoValidator = require('..');
 
 var path = require('path');
@@ -63,5 +65,5 @@ describe('protobufjs-validator', function () {
         }).not.to.throw();
         // 3 missing names === 3 errors
         expect(validator.getErrors().length).to.equal(3);
-    })
-})
+    });
+});
