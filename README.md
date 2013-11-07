@@ -19,7 +19,6 @@ Make a ProtobufValidator
     var ProtobufValidator = require('protobuf-validator').ProtobufValidator;
 
     // First, Get a ProtoBuf.js Reflect Instance for your message
-
     var builder = Protobuf.protoFromFile(path.join(__dirname, 'messages.proto'));
     var myMessageReflection = builder.lookup('MyMessage');
     
@@ -56,5 +55,6 @@ By default, an Error will be thrown when encountered. But you are encouraged to 
         .hasValidValues()
         .hasRequiredFields();
     
+    // because they've been stored in .errors
     validator.errors.length > 0; // true
 
