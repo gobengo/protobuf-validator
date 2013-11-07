@@ -2,6 +2,8 @@
 
 Validate Objects as [Protocol Buffer](https://developers.google.com/protocol-buffers/docs/proto) messages.
 
+Thanks to [ProtoBuf.js](https://github.com/dcodeIO/ProtoBuf.js)!
+
 ## Usage
 
 Assuming you have a message `MyMessage` in a `messages.proto` file.
