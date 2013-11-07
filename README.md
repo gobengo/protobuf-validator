@@ -1,4 +1,4 @@
-protobufjs-validator
+protobuf-validator
 ====================
 
-Validate ProtoBuf.js Messages
+Validate Objects as [Protocol Buffer](https://developers.google.com/protocol-buffers/docs/proto) messages.

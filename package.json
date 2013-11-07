@@ -1,5 +1,5 @@
 {
-  "name": "protobufjs-validator",
+  "name": "protobuf-validator",
   "version": "0.0.0",
   "description": "Validate ProtoBuf.js Messages",
   "main": "index.js",
