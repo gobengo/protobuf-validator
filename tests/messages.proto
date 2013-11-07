@@ -11,3 +11,7 @@ message B {
 message C {
     required string name = 1;
 }
+
+message HasInt32 {
+    required int32 int32 = 1;
+}
