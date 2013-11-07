@@ -29,6 +29,18 @@ describe('protobufjs-validator', function () {
             expect(typeof validator.hasValidValues).to.equal('function');
         });
 
+        it('allows objects with valid values, and returns this', function () {
+            var validator = new ProtobufValidator(reflects.HasInt32);
+            var m = {
+                int32: 1234
+            };
+            var ret;
+            expect(function () {
+                ret = validator.validate(m).hasValidValues();
+            }).not.to.throw(ProtobufValidator.InvalidValueError);
+            expect(ret).to.equal(validator);
+        });
+
         it('rejects strings passed to int32 fields', function () {
             var validator = new ProtobufValidator(reflects.HasInt32);
             var m = {
@@ -66,14 +78,16 @@ describe('protobufjs-validator', function () {
             expect(err.value).to.equal(null);
         });
 
-        it('allows messages with all fields', function () {
+        it('allows messages with all fields and returns this', function () {
             var validator = new ProtobufValidator(reflects.C);
             var c = new messages.C({
                 name: 'c'
             });
+            var ret;
             expect(function () {
-                validator.validate(c).hasRequiredFields();
+                ret = validator.validate(c).hasRequiredFields();
             }).not.to.throw();
+            expect(ret).to.equal(validator);
         });
 
         it('allows objects with all fields', function () {
