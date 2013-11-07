@@ -38,6 +38,17 @@ describe('protobufjs-validator', function () {
                 validator.validate(m).hasValidValues();
             }).to.throw(ProtobufValidator.InvalidValueError);
         });
+
+        xit('rejects floats passed to int32 fields', function () {
+            var validator = new ProtobufValidator(reflects.HasInt32);
+            var m = {
+                int32: 3.1415
+            };
+            // FIXME: Fails! ProtoBuf.js coerces to `3`
+            expect(function () {
+                validator.validate(m).hasValidValues();
+            }).to.throw(ProtobufValidator.InvalidValueError);
+        });
     });
 
     describe('.hasRequiredFields()', function () {
