@@ -3,6 +3,7 @@
 Validate Objects as [Protocol Buffer](https://developers.google.com/protocol-buffers/docs/proto) messages.
 
 Thanks to [ProtoBuf.js](https://github.com/dcodeIO/ProtoBuf.js)!
+API inspired by [node-validator](https://github.com/chriso/node-validator).
 
 ## Usage
 
