@@ -14,6 +14,25 @@ var reflects = builder.lookup().children.reduce(function (prev, cur) {
 var messages = builder.build();
 
 describe('protobufjs-validator', function () {
+    it('can validate complex messages', function () {
+        var component = new (messages.Component)({
+            "name": "streamhub-wall",
+            "version": "2.3.0",
+            "main": "http://cdn.livefyre.com/libs/apps/Livefyre/streamhub-wall/v2.3.0-build.188/streamhub-wall.min.js",
+            // This is a submessage
+            "configSchema": {
+                "mustBeInt32": 12
+            }
+        });
+        var validator = new ProtobufValidator(reflects.Component);
+        expect(function () {
+            validator.validate(component)
+                .hasValidValues()
+                .hasRequiredFields();
+        }).not.to.throw();
+        expect(component).to.be.ok;
+    });
+
     it('.validate(obj) saves ._message', function () {
         var validator = new ProtobufValidator(reflects.C);
         var c = new messages.C({});
@@ -60,6 +79,23 @@ describe('protobufjs-validator', function () {
             expect(function () {
                 validator.validate(m).hasValidValues();
             }).to.throw(ProtobufValidator.InvalidValueError);
+        });
+
+        it('validates values on submessages', function () {
+            var component = {
+                "name": "streamhub-wall",
+                "version": "2.3.0",
+                "main": "http://cdn.livefyre.com/libs/apps/Livefyre/streamhub-wall/v2.3.0-build.188/streamhub-wall.min.js",
+                "configSchema": {
+                    // This is invalid on a ConfigSchema submessage
+                    "mustBeInt32": "NOT TODAY BUDDY"
+                }
+            };
+            var validator = new ProtobufValidator(reflects.Component);
+            expect(function () {
+                validator.validate(component).hasValidValues();
+            }).to.throw(ProtobufValidator.InvalidValueError);
+            expect(component).to.be.ok;
         });
     });
 

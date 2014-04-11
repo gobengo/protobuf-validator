@@ -15,3 +15,18 @@ message C {
 message HasInt32 {
     required int32 int32 = 1;
 }
+
+message Component {
+    optional string id = 1;
+    required string name = 2;
+    required string version = 3;
+    
+    optional string latestVersion = 4;
+    optional string description = 5;
+    optional string main = 6;
+    optional ConfigSchema configSchema = 7;
+
+    message ConfigSchema {
+        required int32 mustBeInt32 = 1;
+    }
+}
