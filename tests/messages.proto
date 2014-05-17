@@ -30,3 +30,7 @@ message Component {
         required int32 mustBeInt32 = 1;
     }
 }
+
+message App {
+    repeated Component components = 1;
+}

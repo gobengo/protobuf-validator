@@ -136,6 +136,54 @@ describe('protobufjs-validator', function () {
             }).not.to.throw();
         });
 
+        it('allows messages with an empty repeated list', function () {
+            var validator = new ProtobufValidator(reflects.App);
+            var app = {
+                components: []
+            };
+            expect(function () {
+                validator.validate(app).hasRequiredFields();
+            }).not.to.throw();
+        });
+
+        it('allows messages with an null repeated list', function () {
+            var validator = new ProtobufValidator(reflects.App);
+            var app = {
+                components: null
+            };
+            expect(function () {
+                validator.validate(app).hasRequiredFields();
+            }).not.to.throw();
+        });
+
+        it('allows messages with valid objects in repeated list', function () {
+            var validator = new ProtobufValidator(reflects.App);
+            var app = {
+                components: [{
+                    name: 'ben',
+                    version: '1'
+                }]
+            };
+            expect(function () {
+                validator.validate(app).hasRequiredFields();
+            }).not.to.throw(ProtobufValidator.RequiredFieldError);
+        });
+
+        it('rejects messages with invalid objects in repeated list', function () {
+            var validator = new ProtobufValidator(reflects.App);
+            var app = {
+                components: [,{
+                    name: 'you',
+                    version: '1',
+                },{
+                    name: 'ben'
+                }]
+            };
+            expect(function () {
+                validator.validate(app).hasRequiredFields();
+            }).to.throw(ProtobufValidator.RequiredFieldError);
+        });
+
         it('rejects messages without all fields', function () {
             var validator = new ProtobufValidator(reflects.A);
             var a = new messages.A();
